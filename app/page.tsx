@@ -1,15 +1,41 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Phone, Clock, MapPin, Wrench, ShoppingCart, Star, Shield, Users, BadgeCheck } from "lucide-react"
+import { Phone, Clock, MapPin, Wrench, ShoppingCart, Star, BadgeCheck } from "lucide-react"
 import Image from "next/image"
+import { useArticulos } from "@/hooks/use-articulos"
+import { FiltrosArticulos } from "@/components/custom-ui/FiltrosArticulos"
+import { Paginacion } from "@/components/custom-ui/Paginacion"
 
 export default function HomePage() {
   const [currentView, setCurrentView] = useState<"hero" | "servicios" | "repuestos">("hero")
+  const articulosRef = useRef<HTMLDivElement>(null)
 
-  const navigateToSection = (section: "servicios" | "repuestos") => {
+  const {
+    articulos,
+    loading,
+    error,
+    filtroTipo,
+    setFiltroTipo,
+    filtroSubtipos,
+    toggleSubtipo,
+    limpiarSubtipos,
+    subtiposDisponibles,
+    filtroModelos,
+    toggleModelo,
+    limpiarModelos,
+    modelosDisponibles,
+    ordenPor,
+    setOrdenPor,
+    paginaActual,
+    setPaginaActual,
+    totalPaginas,
+    totalArticulos,
+  } = useArticulos()
+
+  const navigateToSection = (section: "servicios" | "repuestos" | "hero") => {
     setCurrentView(section)
   }
 
@@ -20,6 +46,19 @@ export default function HomePage() {
     const element = document.getElementById(section)
     element?.scrollIntoView({ behavior: "smooth" })
   }
+
+  const scrollToArticulos = () => {
+    if (articulosRef.current) {
+      articulosRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
+    }
+  }
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [currentView])
 
   const electrodomesticos = [
     {
@@ -41,45 +80,6 @@ export default function HomePage() {
     },
   ]
 
-  const repuestos = [
-    {
-      nombre: "Termostato Universal",
-      descripcion: "Termostato regulable para heladeras y freezers",
-      precio: "$8.500",
-      modelos: "Compatible con Gafa, Electrolux, Whirlpool",
-    },
-    {
-      nombre: "Bomba de Agua Lavarropas",
-      descripcion: "Bomba de desagote para lavarropas automáticos",
-      precio: "$12.000",
-      modelos: "Drean, Samsung, LG modelos 2018-2024",
-    },
-    {
-      nombre: "Correa Lavarropas",
-      descripcion: "Correa de transmisión reforzada",
-      precio: "$3.200",
-      modelos: "Whirlpool, Gafa, Patrick modelos estándar",
-    },
-    {
-      nombre: "Filtro Heladera",
-      descripcion: "Filtro de agua para dispensers",
-      precio: "$15.800",
-      modelos: "Samsung, LG side by side 2019-2024",
-    },
-    {
-      nombre: "Resistencia Lavavajillas",
-      descripcion: "Resistencia calefactora 2000W",
-      precio: "$9.500",
-      modelos: "Bosch, Siemens, Ariston modelos compactos",
-    },
-    {
-      nombre: "Capacitor Aire Acondicionado",
-      descripcion: "Capacitor de arranque 35µF",
-      precio: "$4.800",
-      modelos: "Split 2200-3500 frigorías todas las marcas",
-    },
-  ]
-
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -87,7 +87,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-red-hat-display font-bold text-[#A50034]">Home Service</h1>
+              <h1 className="text-2xl font-red-hat-display font-bold text-[#A50034] hover:cursor-pointer" onClick={() => navigateToSection("hero")}>Home Service</h1>
             </div>
             <nav className="hidden md:flex space-x-8">
               <button
@@ -112,8 +112,8 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8 sm:mb-12">
               <h1 className="text-3xl sm:text-4xl md:text-6xl font-red-hat-display font-bold text-gray-900 mb-1 sm:mb-2 px-2">
-                Servicio Técnico Oficial y Venta de{" "}
-                <span className="text-[#A50034]">Repuestos y Partes Originales</span>
+                Servicio Técnico Oficial {" "}
+                <span className="text-[#A50034]">Venta de Repuestos y Partes Originales</span>
                 <div className="flex items-center justify-center gap-3 mt-2">
                   <Image src="/images/lg.png" alt="LG" width={120} height={60} className="inline-block" />
                   <span className="text-sm sm:text-base text-gray-600 font-medium">Servicio Técnico Autorizado</span>
@@ -256,7 +256,9 @@ export default function HomePage() {
               </div>
               <Button
                 className="bg-[#A50034] hover:bg-[#8A0029] text-white px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg"
-                onClick={() => window.open("https://wa.me/5491128528465", "_blank")}
+                onClick={() => window.open(`https://wa.me/5491128528465?text=${encodeURIComponent(
+                            `Hola, me gustaría agendar una visita técnica`
+                          )}`, "_blank")}
               >
                 <Image src="/images/whatsapp.png" alt="WhatsApp" width={20} height={20} className="mr-2" />
                 Contactar por WhatsApp
@@ -281,7 +283,100 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+            {/* Filtros */}
+            <div ref={articulosRef}>
+              <FiltrosArticulos
+                filtroTipo={filtroTipo}
+                onFiltroTipoChange={setFiltroTipo}
+                filtroSubtipos={filtroSubtipos}
+                onToggleSubtipo={toggleSubtipo}
+                onLimpiarSubtipos={limpiarSubtipos}
+                subtiposDisponibles={subtiposDisponibles}
+                filtroModelos={filtroModelos}
+                onToggleModelo={toggleModelo}
+                onLimpiarModelos={limpiarModelos}
+                modelosDisponibles={modelosDisponibles}
+                ordenPor={ordenPor}
+                onOrdenChange={setOrdenPor}
+                totalArticulos={totalArticulos}
+              />
+            </div>  
+
+            {/* Loading y Error */}
+            {loading && (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#A50034]"></div>
+                <p className="mt-2 text-gray-600">Cargando artículos...</p>
+              </div>
+            )}
+
+            {error && (
+              <div className="text-center py-12">
+                <p className="text-red-600">Error: {error}</p>
+              </div>
+            )}
+
+            {/* Grid de artículos */}
+            {!loading && !error && (
+              <>
+                <div 
+                className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+                  {articulos.map((articulo) => (
+                    <Card key={articulo.id} className="hover:shadow-lg transition-shadow bg-white h-auto flex flex-col">
+                      {/* <div className="aspect-square relative overflow-hidden rounded-t-lg">
+                        <Image
+                          src={articulo.imagen || "/placeholder.svg"}
+                          alt={articulo.nombre}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute top-2 right-2">
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              articulo.tipo === "repuesto" ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"
+                            }`}
+                          >
+                            {articulo.tipo === "repuesto" ? "Repuesto" : "Parte"}
+                          </span>
+                        </div>
+                      </div> */}
+                      <CardHeader className="pb-3 flex-shrink-0">
+                        <CardTitle className="font-red-hat-display text-lg sm:text-xl text-[#A50034] line-clamp-2">
+                          {articulo.nombre}
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 text-sm sm:text-base line-clamp-3">
+                          {articulo.descripcion}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="flex-grow flex flex-col justify-between">
+                        <div className="space-y-3 flex-grow">
+                          <div className="flex-grow">
+                            <span className="font-semibold text-gray-700 block mb-1 text-sm sm:text-base">
+                              Modelos compatibles:
+                            </span>
+                            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{articulo.modelos?.join(', ')}</p>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-[#A50034] hover:bg-[#8A0029] text-white mt-4 text-sm sm:text-base flex-shrink-0"
+                          onClick={() => window.open(`https://wa.me/5491138652822?text=${encodeURIComponent(
+                            `Hola, quiero comprar este artículo: ${articulo.descripcion}`
+                          )}`, "_blank")}
+                        >
+                          <Image src="/images/whatsapp.png" alt="WhatsApp" width={16} height={16} className="mr-2" />
+                          Comprar
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Paginación */}
+                <Paginacion paginaActual={paginaActual} totalPaginas={totalPaginas} onPaginaChange={setPaginaActual} onPageChangeScroll={scrollToArticulos} />
+              </>
+            )}
+
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
               {repuestos.map((repuesto, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow bg-white h-80 flex flex-col">
                   <CardHeader className="pb-3 flex-shrink-0">
@@ -315,10 +410,10 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
+            </div> */}
 
             {/* Mensaje para repuestos no encontrados */}
-            <Card className="bg-[#A50034] text-white mx-2 sm:mx-0">
+            <Card className="bg-[#A50034] text-white mx-2 sm:mx-0 mt-8">
               <CardContent className="p-6 sm:p-8 text-center">
                 <h3 className="font-red-hat-display text-xl sm:text-2xl font-bold mb-4">
                   ¿No encontrás el repuesto o parte que necesitás?
@@ -329,7 +424,9 @@ export default function HomePage() {
                 <Button
                   variant="secondary"
                   className="bg-white text-[#A50034] hover:bg-gray-100 px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg font-semibold"
-                  onClick={() => window.open("https://wa.me/5491138652822", "_blank")}
+                  onClick={() => window.open(`https://wa.me/5491138652822?text=${encodeURIComponent(
+                            `Hola, quiero consultar si tienen... para el modelo...`
+                          )}`, "_blank")}
                 >
                   <Image src="/images/whatsapp.png" alt="WhatsApp" width={20} height={20} className="mr-2" />
                   Consultar Repuesto

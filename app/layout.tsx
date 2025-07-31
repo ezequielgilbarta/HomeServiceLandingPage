@@ -15,9 +15,44 @@ const redHatDisplay = Red_Hat_Display({
 })
 
 export const metadata = {
-  title: "Home Service - Reparación de Electrodomésticos y Repuestos",
-  description: "Más de 20 años de experiencia en reparación de electrodomésticos. Zona Norte, Buenos Aires.",
-    generator: 'v0.dev'
+  title: "Home Service - Servicio Técnico Oficial y Venta de Repuestos | Partes Originales",
+  description: "Reparación y venta de repuestos originales LG en Zona Norte, Buenos Aires. Servicio técnico especializado en lavarropas, heladeras, lavavajillas y más.",
+  keywords: [
+  "reparación de electrodomésticos LG",
+  "servicio técnico LG zona norte",
+  "reparación de lavarropas LG",
+  "reparación de heladeras LG",
+  "reparación de lavavajillas LG",
+  "reparación de lavasecarropas LG",
+  "venta de repuestos LG",
+  "repuestos originales LG",
+  "partes originales LG",
+  "servicio técnico especializado LG"
+],
+  authors: [{ name: "Home Service", url: "https://homeservicezn.com.ar" }],
+  creator: "Ezequiel Gil Barta",
+  metadataBase: new URL("https://homeservicezn.com.ar"),
+  openGraph: {
+    title: "Home Service - Reparación de Electrodomésticos",
+    description: "Especialistas en LG, con más de 20 años de experiencia.",
+    url: "https://homeservicezn.com.ar",
+    siteName: "Home Service",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "es_AR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Home Service - Reparación de Electrodomésticos",
+    description: "Especialistas en LG, con más de 20 años de experiencia.",
+    images: ["/og-image.png"],
+  },
 }
 
 export default function RootLayout({

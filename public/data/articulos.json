@@ -1,0 +1,64 @@
+{
+  "articulos": [
+    {
+      "id": 1,
+      "nombre": "Filtro LT700 ADQ36006113",
+      "descripcion": "Filtro de Agua Heladera LT700 ADQ36006113",
+      "modelos": ["GR-J318LSBM"],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-lt700.png"
+    },
+    {
+      "id": 2,
+      "nombre": "Filtro LT800 ADQ73613401",
+      "descripcion": "Filtro de Agua Heladera LT800 ADQ73613401",
+      "modelos": ["GS74SDS"],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-lt800.png"
+    },
+    {
+      "id": 3,
+      "nombre": "Filtro LT1000 ADQ74793501",
+      "descripcion": "Filtro de Agua Heladera LT1000 ADQ74793501",
+      "modelos": ["GM-X267NSTM", "LS74SXSX", "LM75SDS", "GS66SXSC", "GS77SXTC"],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado":"",
+      "imagen": "/images/articulos/filtro-lt1000.png"
+    },
+    {
+      "id": 4,
+      "nombre": "Filtro ADQ73153301",
+      "descripcion": "Filtro de Agua Heladera ADQ73153301",
+      "modelos": ["GC-J237JSPN"],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-adq73153301.png"
+    },
+    {
+      "id": 5,
+      "nombre": "Filtro Externo",
+      "descripcion": "Filtro de Agua Heladera Externo AJR73482512",
+      "modelos": ["GC-L207WTQ", "LS65SDP1", "GC-X247CQBV", "GR-P257BTA"],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-externo.png"
+    },
+    {
+      "id": 6,
+      "nombre": "Filtro ADQ72910901",
+      "descripcion": "Filtro de Agua Heladera ADQ72910901",
+      "modelos": ["GC-P207WTQ"],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "activo",
+      "imagen": "/images/articulos/filtro-adq72910901.png"
+    }
+  ]
+}
