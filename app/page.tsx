@@ -360,11 +360,11 @@ export default function HomePage() {
                         <Button
                           className="w-full bg-[#A50034] hover:bg-[#8A0029] text-white mt-4 text-sm sm:text-base flex-shrink-0"
                           onClick={() => window.open(`https://wa.me/5491138652822?text=${encodeURIComponent(
-                            `Hola, quiero comprar este artículo: ${articulo.descripcion}`
+                            `Hola, quiero consultar por este artículo: ${articulo.descripcion}`
                           )}`, "_blank")}
                         >
                           <Image src="/images/whatsapp.png" alt="WhatsApp" width={16} height={16} className="mr-2" />
-                          Comprar
+                          Consultar
                         </Button>
                       </CardContent>
                     </Card>
