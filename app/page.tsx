@@ -176,7 +176,7 @@ export default function HomePage() {
               </h2>
               <div className="max-w-4xl mx-auto px-2">
                 <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8">
-                  Somos una empresa familiar con{" "}
+                  Somos una empresa con{" "}
                   <strong className="text-[#A50034]">más de 20 años de experiencia</strong> en el rubro de reparación de
                   electrodomésticos. Nos especializamos en brindar soluciones rápidas y confiables para mantener tu hogar funcionando perfectamente.
                 </p>
@@ -191,17 +191,17 @@ export default function HomePage() {
                   </div>
                   <div className="text-center">
                     <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4">
+                      <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                    </div>
+                    <h3 className="font-red-hat-display font-semibold text-lg sm:text-xl mb-2">Zona Norte</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">Cobertura en áreas residenciales y comerciales de Zona Norte, Buenos Aires (Nordelta, Tigre, San Fernando, San Isidro, Vicente López)</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4">
                       <Star className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                     </div>
                     <h3 className="font-red-hat-display font-semibold text-lg sm:text-xl mb-2">Calidad Asegurada</h3>
                     <p className="text-gray-600 text-sm sm:text-base">Más de 20 años de experiencia brindando servicios en la zona</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                    </div>
-                    <h3 className="font-red-hat-display font-semibold text-lg sm:text-xl mb-2">Zona Norte</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">Cobertura en áreas residenciales y comerciales de Zona Norte, Buenos Aires</p>
                   </div>
                 </div>
               </div>
@@ -444,7 +444,7 @@ export default function HomePage() {
             <div className="text-center sm:text-left">
               <h3 className="font-red-hat-display text-xl sm:text-2xl font-bold text-[#A50034] mb-4">Home Service</h3>
               <p className="text-gray-300 text-sm sm:text-base">
-                Más de 20 años de experiencia en reparación de electrodomésticos. Tu hogar en las mejores manos.
+                Más de 20 años de experiencia en reparación de electrodomésticos LG. Tu hogar en las mejores manos.
               </p>
             </div>
             <div className="text-center sm:text-left">
@@ -461,6 +461,9 @@ export default function HomePage() {
                 <div className="flex items-center justify-center sm:justify-start">
                   <MapPin className="h-4 w-4 mr-2" />
                   <span>Zona Norte, Buenos Aires</span>
+                </div>
+                <div className="flex items-center justify-center sm:justify-start ml-5">
+                  <span>(Nordelta, Tigre, San Fernando, San Isidro, Vicente López)</span>
                 </div>
               </div>
             </div>
