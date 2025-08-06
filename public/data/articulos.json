@@ -59,6 +59,156 @@
       "subtipo": "filtro",
       "estado": "activo",
       "imagen": "/images/articulos/filtro-adq72910901.png"
-    }
+    },
+    {
+    "id": 7,
+    "nombre": "Resistencia",
+    "descripcion": "Resistencia para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "resistencia",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 8,
+    "nombre": "Placa Display",
+    "descripcion": "Placa Display para Lavavajillas D1452LF",
+    "modelos": ["D1452LF"],
+    "tipo": "repuesto",
+    "subtipo": "placa display",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 9,
+    "nombre": "Placa Display",
+    "descripcion": "Placa Display para Lavavajillas D1455CF",
+    "modelos": ["D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "placa display",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 10,
+    "nombre": "Placa Main",
+    "descripcion": "Placa Main para Lavavajillas D1452LF",
+    "modelos": ["D1452LF"],
+    "tipo": "repuesto",
+    "subtipo": "placa main",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 11,
+    "nombre": "Placa Main",
+    "descripcion": "Placa Main para Lavavajillas D1455CF",
+    "modelos": ["D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "placa main",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 12,
+    "nombre": "Caudalímetro",
+    "descripcion": "Caudalímetro para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "caudalímetro",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 13,
+    "nombre": "Filtro Pelusa",
+    "descripcion": "Filtro Pelusa para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "filtro pelusa",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 14,
+    "nombre": "Bomba Desagote (Pump)",
+    "descripcion": "Bomba Desagote para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "bomba desagote",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 15,
+    "nombre": "Motor Principal (Washer)",
+    "descripcion": "Motor Principal para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "motor principal",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 16,
+    "nombre": "Panel",
+    "descripcion": "Panel para Lavavajillas D1455CF",
+    "modelos": ["D1455CF"],
+    "tipo": "repuesto",
+    "subtipo": "panel",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 17,
+    "nombre": "Tapa",
+    "descripcion": "Tapa para Lavavajillas D1452LF",
+    "modelos": ["D1452LF"],
+    "tipo": "parte",
+    "subtipo": "tapa",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 18,
+    "nombre": "Tapa",
+    "descripcion": "Tapa para Lavavajillas D1455CF",
+    "modelos": ["D1455CF"],
+    "tipo": "parte",
+    "subtipo": "tapa",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 19,
+    "nombre": "Rack Superior",
+    "descripcion": "Rack Superior para Lavavajillas D1452LF (Rack Medio para D1455CF)",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "parte",
+    "subtipo": "rack superior",
+    "estado": "stock",
+    "imagen": ""
+  },
+  {
+    "id": 20,
+    "nombre": "Rack Inferior",
+    "descripcion": "Rack Inferior para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "parte",
+    "subtipo": "rack inferior",
+    "estado": "activo",
+    "imagen": ""
+  },
+  {
+    "id": 21,
+    "nombre": "Canasto",
+    "descripcion": "Canasto para Lavavajillas D1452LF, D1455CF",
+    "modelos": ["D1452LF", "D1455CF"],
+    "tipo": "parte",
+    "subtipo": "canasto",
+    "estado": "activo",
+    "imagen": ""
+  }
   ]
 }
