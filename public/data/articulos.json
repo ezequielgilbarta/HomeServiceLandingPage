@@ -132,7 +132,7 @@
   },
   {
     "id": 14,
-    "nombre": "Bomba Desagote (Pump)",
+    "nombre": "Bomba Desagote",
     "descripcion": "Bomba Desagote para Lavavajillas D1452LF, D1455CF",
     "modelos": ["D1452LF", "D1455CF"],
     "tipo": "repuesto",
@@ -142,7 +142,7 @@
   },
   {
     "id": 15,
-    "nombre": "Motor Principal (Washer)",
+    "nombre": "Motor Principal",
     "descripcion": "Motor Principal para Lavavajillas D1452LF, D1455CF",
     "modelos": ["D1452LF", "D1455CF"],
     "tipo": "repuesto",
