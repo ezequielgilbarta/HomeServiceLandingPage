@@ -238,7 +238,7 @@ export default function HomePage() {
             {/* Contacto y horarios */}
             <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 text-center mx-2 sm:mx-0">
               <h2 className="text-xl sm:text-2xl font-red-hat-display font-bold text-gray-900 mb-4 sm:mb-6">
-                Contactanos para agendar una visita técnina
+                Contactanos para agendar una visita técnica
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="flex items-center justify-center text-sm sm:text-base">
