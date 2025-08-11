@@ -18,7 +18,10 @@ export const metadata = {
   title: "Home Service - Servicio Técnico Oficial y Venta de Repuestos | Partes Originales",
   description: "Reparación y venta de repuestos originales LG en Zona Norte, Buenos Aires. Servicio técnico especializado en lavarropas, heladeras, lavavajillas y más.",
   keywords: [
-  "home service lg",  
+  "home service lg",
+  "repuestos lg",
+  "servicio tecnico lg",
+  "service oficial lg",  
   "reparación de electrodomésticos LG",
   "servicio técnico LG zona norte",
   "reparación de lavarropas LG",
