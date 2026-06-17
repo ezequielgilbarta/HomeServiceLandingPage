@@ -844,7 +844,7 @@ export default function HomePage() {
                               className="w-full py-2.5 text-sm"
                               variant="primary"
                             >
-                              Consultar precio
+                              Consultar
                             </WhatsAppButton>
                           </div>
                         </article>
