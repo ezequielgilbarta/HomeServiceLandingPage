@@ -1,16 +1,125 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Phone, Clock, MapPin, Wrench, ShoppingCart, Star, BadgeCheck } from "lucide-react"
+import { useState, useRef, useCallback } from "react"
+import {
+  Phone,
+  Clock,
+  MapPin,
+  ShoppingCart,
+  BadgeCheck,
+  ChevronRight,
+  Shield,
+  Zap,
+  Star,
+  Menu,
+  X,
+  MessageCircle,
+} from "lucide-react"
 import Image from "next/image"
 import { useArticulos } from "@/hooks/use-articulos"
 import { FiltrosArticulos } from "@/components/custom-ui/FiltrosArticulos"
 import { Paginacion } from "@/components/custom-ui/Paginacion"
 
+// ─── Constantes de contacto centralizadas ────────────────────────────────────
+const WHATSAPP_SERVICIOS = "5491128528465"
+const WHATSAPP_REPUESTOS = "5491138652822"
+
+const waUrl = (numero: string, texto: string) =>
+  `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`
+
+// ─── Datos de contenido ───────────────────────────────────────────────────────
+const SERVICIOS = [
+  {
+    nombre: "Heladeras",
+    descripcion: "Compresores, placas, filtros, resistencias y mantenimiento general.",
+  },
+  {
+    nombre: "Lavarropas y Secarropas",
+    descripcion: "Bombas, placas, motores, resistencias y mantenimiento general.",
+  },
+  {
+    nombre: "Lavavajillas",
+    descripcion: "Resistencias, placas, bombas, limpieza de filtros y mantenimiento general.",
+  },
+]
+
+const ZONAS = ["Tigre", "Nordelta", "San Fernando", "San Isidro", "Vicente López", "CABA"]
+
+const DIFERENCIADORES = [
+  {
+    icon: BadgeCheck,
+    titulo: "Servicio Oficial Autorizado",
+    descripcion: "Técnicos certificados por LG Argentina con acceso a repuestos originales de fábrica.",
+  },
+  {
+    icon: Shield,
+    titulo: "Garantía en cada reparación",
+    descripcion: "Todos nuestros trabajos tienen garantía. Si hay un problema, volvemos sin costo adicional.",
+  },
+  {
+    icon: Zap,
+    titulo: "Diagnóstico rápido",
+    descripcion: "Evaluamos el equipo en el domicilio y te informamos el costo antes de comenzar.",
+  },
+  {
+    icon: MapPin,
+    titulo: "Cobertura Zona Norte",
+    descripcion: "Atendemos Tigre, Nordelta, San Fernando, San Isidro, Vicente López y CABA.",
+  },
+]
+
+const STATS = [
+  { valor: "+20", unidad: "años", descripcion: "de experiencia" },
+]
+
+// ─── Subcomponentes ───────────────────────────────────────────────────────────
+
+function WhatsAppButton({
+  numero,
+  mensaje,
+  children,
+  className = "",
+  variant = "primary",
+}: {
+  numero: string
+  mensaje: string
+  children: React.ReactNode
+  className?: string
+  variant?: "primary" | "secondary" | "outline"
+}) {
+  const baseStyles =
+    "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
+  const variants = {
+    primary: "bg-[#A50034] hover:bg-[#8A0029] text-white focus-visible:ring-[#A50034] shadow-sm hover:shadow-md",
+    secondary: "bg-white text-[#A50034] hover:bg-gray-50 focus-visible:ring-[#A50034] border border-[#A50034]",
+    outline: "bg-transparent border-2 border-white text-white hover:bg-white/10 focus-visible:ring-white",
+  }
+  return (
+    <a
+      href={waUrl(numero, mensaje)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${baseStyles} ${variants[variant]} ${className}`}
+      aria-label={`Contactar por WhatsApp: ${mensaje}`}
+    >
+      <Image src="/images/whatsapp.png" alt="" width={18} height={18} aria-hidden="true" />
+      {children}
+    </a>
+  )
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-block text-xs font-semibold tracking-widest uppercase text-[#A50034] mb-3 bg-[#A50034]/8 px-3 py-1 rounded-full">
+      {children}
+    </span>
+  )
+}
+
+// ─── Componente principal ─────────────────────────────────────────────────────
 export default function HomePage() {
   const [currentView, setCurrentView] = useState<"hero" | "servicios" | "repuestos">("hero")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const articulosRef = useRef<HTMLDivElement>(null)
 
   const {
@@ -35,450 +144,813 @@ export default function HomePage() {
     totalArticulos,
   } = useArticulos()
 
-  const navigateToSection = (section: "servicios" | "repuestos" | "hero") => {
-    setCurrentView(section)
-  }
-
-  const [activeSection, setActiveSection] = useState<"hero" | "servicios" | "repuestos">("hero")
-
-  const scrollToSection = (section: "servicios" | "repuestos") => {
-    setActiveSection(section)
-    const element = document.getElementById(section)
-    element?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const scrollToArticulos = () => {
-    if (articulosRef.current) {
-      articulosRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      })
-    }
-  }
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [currentView])
-
-  const electrodomesticos = [
-    {
-      nombre: "Heladeras",
-      reparaciones: [
-        "Compresores, placas, filtros, resistencias, mantenimiento general, etc.",
-      ],
+  const navigateTo = useCallback(
+    (section: "hero" | "servicios" | "repuestos") => {
+      setCurrentView(section)
+      setMobileMenuOpen(false)
+      // Scroll to top when changing views
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50)
     },
-    {
-      nombre: "Lavarropas y Secarropas",
-      reparaciones: [
-        "Bombas, placas, motores, resistencias, revisión de ruidos o fallas, limpieza profunda, etc."],
-    },
-    {
-      nombre: "Lavavajillas",
-      reparaciones: [
-        "Resistencias, placas, bombas, limpieza de filtros y ductos, etc.",
-      ],
-    },
-  ]
+    []
+  )
+
+  const scrollToArticulos = useCallback(() => {
+    articulosRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [])
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+
+      {/* ── Header ─────────────────────────────────────────────────── */}
+      <header
+        role="banner"
+        className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-red-hat-display font-bold text-[#A50034] hover:cursor-pointer" onClick={() => navigateToSection("hero")}>Home Service</h1>
-            </div>
-            <nav className="hidden md:flex space-x-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo / Marca */}
+            <button
+              onClick={() => navigateTo("hero")}
+              className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034] rounded-md"
+              aria-label="Ir al inicio – Home Service"
+            >
+              <span className="text-xl font-red-hat-display font-bold text-[#A50034]">
+                Home Service
+              </span>
+              <span className="hidden sm:inline-block text-xs text-gray-400 font-medium border border-gray-200 rounded px-1.5 py-0.5">
+                LG Oficial
+              </span>
+            </button>
+
+            {/* Nav desktop */}
+            <nav role="navigation" aria-label="Navegación principal" className="hidden md:flex items-center gap-1">
               <button
-                onClick={() => navigateToSection("servicios")}
-                className="text-gray-700 hover:text-[#A50034] font-medium transition-colors"
+                onClick={() => navigateTo("servicios")}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  currentView === "servicios"
+                    ? "bg-[#A50034]/8 text-[#A50034]"
+                    : "text-gray-600 hover:text-[#A50034] hover:bg-gray-50"
+                }`}
+                aria-current={currentView === "servicios" ? "page" : undefined}
               >
                 Servicios
               </button>
               <button
-                onClick={() => navigateToSection("repuestos")}
-                className="text-gray-700 hover:text-[#A50034] font-medium transition-colors"
+                onClick={() => navigateTo("repuestos")}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  currentView === "repuestos"
+                    ? "bg-[#A50034]/8 text-[#A50034]"
+                    : "text-gray-600 hover:text-[#A50034] hover:bg-gray-50"
+                }`}
+                aria-current={currentView === "repuestos" ? "page" : undefined}
               >
                 Repuestos
               </button>
+              <WhatsAppButton
+                numero={WHATSAPP_SERVICIOS}
+                mensaje="Hola, quiero consultar sobre un servicio técnico"
+                className="ml-3 px-4 py-2 text-sm"
+                variant="primary"
+              >
+                Consultar ahora
+              </WhatsAppButton>
             </nav>
+
+            {/* Botón menú mobile */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-gray-600 hover:text-[#A50034] hover:bg-gray-50 transition-colors"
+              aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
+
+          {/* Menú mobile desplegable */}
+          {mobileMenuOpen && (
+            <div
+              className="md:hidden border-t border-gray-100 py-3 space-y-1"
+              role="navigation"
+              aria-label="Menú mobile"
+            >
+              <button
+                onClick={() => navigateTo("servicios")}
+                className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[#A50034] rounded-md"
+              >
+                Servicios
+              </button>
+              <button
+                onClick={() => navigateTo("repuestos")}
+                className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[#A50034] rounded-md"
+              >
+                Repuestos
+              </button>
+              <div className="px-4 pt-2 pb-1">
+                <WhatsAppButton
+                  numero={WHATSAPP_SERVICIOS}
+                  mensaje="Hola, quiero consultar sobre un servicio técnico"
+                  className="w-full py-3 text-sm"
+                  variant="primary"
+                >
+                  Consultar por WhatsApp
+                </WhatsAppButton>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
+      {/* ── VISTA: HERO ─────────────────────────────────────────────── */}
       {currentView === "hero" && (
-        <section className="bg-gradient-to-br from-gray-50 to-white py-7 sm:py-12 min-h-[calc(100vh-4rem)]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 sm:mb-12">
-              <h1 className="text-3xl sm:text-4xl md:text-6xl font-red-hat-display font-bold text-gray-900 mb-1 sm:mb-2 px-2">
-                Servicio Técnico Oficial {" "}
-                <span className="text-[#A50034]">Venta de Repuestos y Partes Originales</span>
-                <div className="flex items-center justify-center gap-3 mt-2">
-                  <Image src="/images/lg.png" alt="LG" width={120} height={60} className="inline-block" />
-                  <span className="text-sm sm:text-base text-gray-600 font-medium">Servicio Técnico Autorizado</span>
-                </div>
+        <main id="main-content">
+
+          {/* Hero principal */}
+          <section
+            aria-labelledby="hero-heading"
+            className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-24"
+          >
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              {/* Badge de confianza */}
+              <div className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm text-gray-600 mb-6 shadow-sm">
+                <BadgeCheck className="h-4 w-4 text-[#A50034]" aria-hidden="true" />
+                <span>Servicio Técnico Oficial Autorizado</span>
+                <Image
+                  src="/images/lg.png"
+                  alt="LG"
+                  width={28}
+                  height={14}
+                  className="ml-1"
+                />
+              </div>
+
+              {/* Headline principal */}
+              <h1
+                id="hero-heading"
+                className="text-4xl sm:text-5xl md:text-6xl font-red-hat-display font-bold text-gray-900 leading-tight mb-5"
+              >
+                Tu electrodoméstico LG{" "}
+                <span className="text-[#A50034]">reparado por técnicos oficiales</span>
               </h1>
-              
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto px-4 sm:px-0">
-              <Card
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-[#A50034] group"
-                onClick={() => navigateToSection("servicios")}
-              >
-                <CardHeader className="text-center pb-4 px-4 sm:px-6">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <Wrench className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl sm:text-2xl font-red-hat-display text-gray-900">Servicios</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center px-4 sm:px-6 pb-6">
-                  <CardDescription className="text-base sm:text-lg">
-                    Reparación especializada con más de 20 años de experiencia
-                  </CardDescription>
-                </CardContent>
-              </Card>
+              {/* Subtítulo */}
+              <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-3 leading-relaxed">
+                Más de 20 años reparando heladeras, lavarropas y lavavajillas LG en Zona Norte.
+                Diagnóstico en tu domicilio, repuestos originales y garantía incluida.
+              </p>
 
-              <Card
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-[#A50034] group"
-                onClick={() => navigateToSection("repuestos")}
-              >
-                <CardHeader className="text-center pb-4 px-4 sm:px-6">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <ShoppingCart className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl sm:text-2xl font-red-hat-display text-gray-900">
-                    Venta de Repuestos y Partes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center px-4 sm:px-6 pb-6">
-                  <CardDescription className="text-base sm:text-lg">
-                    Repuestos y partes originales
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-      )}
+              {/* Zonas de cobertura */}
+              <p className="text-sm text-gray-400 mb-10">
+                <MapPin className="inline h-3.5 w-3.5 mr-1 text-[#A50034]" aria-hidden="true" />
+                {ZONAS.join(" · ")}
+              </p>
 
-      {currentView === "servicios" && (
-        <section id="servicios" className="py-6 sm:py-12 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Button variant="outline" onClick={() => setCurrentView("hero")} className="mb-8">
-              ← Volver al inicio
-            </Button>
-            {/* ¿Quiénes somos? */}
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-red-hat-display font-bold text-gray-900 mb-6 sm:mb-8 px-2">
-                ¿Quiénes somos?
-              </h2>
-              <div className="max-w-4xl mx-auto px-2">
-                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8">
-                  Somos una empresa con{" "}
-                  <strong className="text-[#A50034]">más de 20 años de experiencia</strong> en el rubro de reparación de
-                  electrodomésticos. Nos especializamos en brindar soluciones rápidas y confiables para mantener tu hogar funcionando perfectamente.
-                </p>
+              {/* CTAs principales */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <WhatsAppButton
+                  numero={WHATSAPP_SERVICIOS}
+                  mensaje="Hola, necesito un servicio técnico para mi electrodoméstico LG"
+                  className="px-8 py-4 text-base"
+                  variant="primary"
+                >
+                  Pedir visita técnica
+                </WhatsAppButton>
+                <button
+                  onClick={() => navigateTo("repuestos")}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:border-[#A50034] hover:text-[#A50034] transition-all duration-200 shadow-sm"
+                >
+                  Ver repuestos
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-8 sm:mt-12">
-                  <div className="text-center">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <BadgeCheck className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+              {/* Social proof mínimo */}
+              <div className="mt-8 flex items-center justify-center gap-1" aria-label="Calificación">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
+                ))}
+                <span className="ml-2 text-sm text-gray-500">Técnicos certificados LG Argentina</span>
+              </div>
+              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <dl className="grid grid-cols-1 divide-x divide-gray-100">
+                  {STATS.map((stat) => (
+                    <div key={stat.valor} className="text-center px-4 sm:px-8">
+                      <dt className="sr-only">{stat.descripcion}</dt>
+                      <dd>
+                        <span className="block text-3xl sm:text-4xl font-red-hat-display font-bold text-[#A50034]">
+                          {stat.valor}
+                        </span>
+                        <span className="block text-xs sm:text-sm text-gray-400 mt-1">
+                          {stat.unidad} · {stat.descripcion}
+                        </span>
+                      </dd>
                     </div>
-                    <h3 className="font-red-hat-display font-semibold text-lg sm:text-xl mb-2">Servicio Oficial</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">Autorizado por LG Argentina con repuestos originales</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                    </div>
-                    <h3 className="font-red-hat-display font-semibold text-lg sm:text-xl mb-2">Zona Norte</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">Cobertura en áreas residenciales y comerciales de Zona Norte, Buenos Aires (Nordelta, Tigre, San Fernando, San Isidro, Vicente López)</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#A50034] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Star className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                    </div>
-                    <h3 className="font-red-hat-display font-semibold text-lg sm:text-xl mb-2">Calidad Asegurada</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">Más de 20 años de experiencia brindando servicios en la zona</p>
-                  </div>
-                </div>
+                  ))}
+                </dl>
               </div>
             </div>
+          </section>
 
-            {/* ¿Qué electrodomésticos reparamos? */}
-            <div className="mb-12 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-red-hat-display font-bold text-gray-900 text-center mb-8 sm:mb-12 px-2">
-                ¿Qué equipos reparamos?
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                {electrodomesticos.map((item, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="font-red-hat-display text-lg sm:text-xl text-[#A50034]">
-                        {item.nombre}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {item.reparaciones.map((reparacion, idx) => (
-                          <li key={idx} className="flex items-start">
-                            
-                            <span className="text-gray-600 text-sm sm:text-base">{reparacion}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+          {/* Stats rápidas */}
+          {/* <section aria-label="Números de la empresa" className="border-y border-gray-100 bg-white">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+              <dl className="grid grid-cols-1 divide-x divide-gray-100">
+                {STATS.map((stat) => (
+                  <div key={stat.valor} className="text-center px-4 sm:px-8">
+                    <dt className="sr-only">{stat.descripcion}</dt>
+                    <dd>
+                      <span className="block text-3xl sm:text-4xl font-red-hat-display font-bold text-[#A50034]">
+                        {stat.valor}
+                      </span>
+                      <span className="block text-xs sm:text-sm text-gray-400 mt-1">
+                        {stat.unidad} · {stat.descripcion}
+                      </span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section> */}
+
+          {/* Servicios (cards de entrada) */}
+          <section
+            aria-labelledby="servicios-heading"
+            className="py-16 sm:py-20 bg-gray-50"
+          >
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-10">
+                <SectionLabel>¿Qué reparamos?</SectionLabel>
+                <h2
+                  id="servicios-heading"
+                  className="text-3xl sm:text-4xl font-red-hat-display font-bold text-gray-900"
+                >
+                  Especialistas en electrodomésticos LG
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+                {SERVICIOS.map((s) => (
+                  <article
+                    key={s.nombre}
+                    className="bg-white rounded-xl p-6 border border-gray-100 hover:border-[#A50034]/30 hover:shadow-md transition-all duration-200 text-left"
+                  >
+                    <h3 className="font-red-hat-display font-bold text-lg text-gray-900 mb-2">
+                      {s.nombre}
+                    </h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{s.descripcion}</p>
+                  </article>
                 ))}
               </div>
-            </div>
-
-            {/* Contacto y horarios */}
-            <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 text-center mx-2 sm:mx-0">
-              <h2 className="text-xl sm:text-2xl font-red-hat-display font-bold text-gray-900 mb-4 sm:mb-6">
-                Contactanos para agendar una visita técnica
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div className="flex items-center justify-center text-sm sm:text-base">
-                  <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-[#A50034]" />
-                  <span className="font-semibold">+54 9 11 2852 8465</span>
-                </div>
-                <div className="flex items-center justify-center text-sm sm:text-base">
-                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-[#A50034]" />
-                  <span>Zona Norte, Buenos Aires</span>
-                </div>
-                <div className="flex items-center justify-center text-sm sm:text-base">
-                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-[#A50034]" />
-                  <span>Lunes a viernes de 9 a 17hs</span>
-                </div>
+              <div className="text-center">
+                <button
+                  onClick={() => navigateTo("servicios")}
+                  className="inline-flex items-center gap-2 text-[#A50034] font-semibold text-sm hover:underline underline-offset-4"
+                >
+                  Ver todos los servicios
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </button>
               </div>
-              <Button
-                className="bg-[#A50034] hover:bg-[#8A0029] text-white px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg"
-                onClick={() => window.open(`https://wa.me/5491128528465?text=${encodeURIComponent(
-                            `Hola, me gustaría agendar una visita técnica`
-                          )}`, "_blank")}
-              >
-                <Image src="/images/whatsapp.png" alt="WhatsApp" width={20} height={20} className="mr-2" />
-                Contactar por WhatsApp
-              </Button>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
 
-      {currentView === "repuestos" && (
-        <section id="repuestos" className="py-6 sm:py-12 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Button variant="outline" onClick={() => setCurrentView("hero")} className="mb-8">
-              ← Volver al inicio
-            </Button>
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-red-hat-display font-bold text-gray-900 mb-6 sm:mb-8 px-2">
-                Venta de Repuestos y Partes
+          {/* Por qué elegirnos */}
+          <section
+            aria-labelledby="diferenciadores-heading"
+            className="py-16 sm:py-20 bg-white"
+          >
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-10">
+                <SectionLabel>¿Por qué elegirnos?</SectionLabel>
+                <h2
+                  id="diferenciadores-heading"
+                  className="text-3xl sm:text-4xl font-red-hat-display font-bold text-gray-900"
+                >
+                  Técnicos oficiales, no cualquier service
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {DIFERENCIADORES.map((d) => {
+                  const Icon = d.icon
+                  return (
+                    <div key={d.titulo} className="text-center px-2">
+                      <div
+                        className="w-12 h-12 bg-[#A50034]/8 rounded-xl flex items-center justify-center mx-auto mb-4"
+                        aria-hidden="true"
+                      >
+                        <Icon className="h-6 w-6 text-[#A50034]" />
+                      </div>
+                      <h3 className="font-red-hat-display font-semibold text-gray-900 mb-2 text-base">
+                        {d.titulo}
+                      </h3>
+                      <p className="text-sm text-gray-500 leading-relaxed">{d.descripcion}</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
+
+          {/* CTA intermedio – Repuestos */}
+          <section
+            aria-labelledby="repuestos-cta-heading"
+            className="py-12 bg-gray-50 border-y border-gray-100"
+          >
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+                <div className="text-center sm:text-left">
+                  <SectionLabel>Tienda de repuestos</SectionLabel>
+                  <h2
+                    id="repuestos-cta-heading"
+                    className="text-2xl font-red-hat-display font-bold text-gray-900 mt-1"
+                  >
+                    Repuestos y partes originales LG
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Filtros, bombas, resistencias, placas y más. Consultá disponibilidad.
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigateTo("repuestos")}
+                  className="flex-shrink-0 inline-flex items-center gap-2 bg-[#A50034] hover:bg-[#8A0029] text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-sm text-sm"
+                >
+                  <ShoppingCart className="h-4 w-4" aria-hidden="true" />
+                  Ver catálogo
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* CTA final – Contacto */}
+          <section
+            aria-labelledby="contacto-cta-heading"
+            className="py-20 bg-[#A50034]"
+          >
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h2
+                id="contacto-cta-heading"
+                className="text-3xl sm:text-4xl font-red-hat-display font-bold text-white mb-4"
+              >
+                ¿Tu equipo LG tiene un problema?
               </h2>
-              <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-2">
-                Contamos con repuestos y partes originales.
+              <p className="text-[#ffb3c7] text-lg mb-8">
+                Escribinos por WhatsApp y coordinamos una visita técnica en tu domicilio.
+                Sin compromiso, sin costo de diagnóstico.
+              </p>
+              <WhatsAppButton
+                numero={WHATSAPP_SERVICIOS}
+                mensaje="Hola, necesito un servicio técnico para mi electrodoméstico LG"
+                className="px-8 py-4 text-base"
+                variant="outline"
+              >
+                Escribir por WhatsApp
+              </WhatsAppButton>
+              <p className="mt-4 text-[#ffb3c7]/70 text-sm">
+                <Clock className="inline h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                Atención lunes a viernes de 9 a 17 hs
               </p>
             </div>
+          </section>
+        </main>
+      )}
 
-            {/* Filtros */}
-            <div ref={articulosRef}>
-              <FiltrosArticulos
-                filtroTipo={filtroTipo}
-                onFiltroTipoChange={setFiltroTipo}
-                filtroSubtipos={filtroSubtipos}
-                onToggleSubtipo={toggleSubtipo}
-                onLimpiarSubtipos={limpiarSubtipos}
-                subtiposDisponibles={subtiposDisponibles}
-                filtroModelos={filtroModelos}
-                onToggleModelo={toggleModelo}
-                onLimpiarModelos={limpiarModelos}
-                modelosDisponibles={modelosDisponibles}
-                ordenPor={ordenPor}
-                onOrdenChange={setOrdenPor}
-                totalArticulos={totalArticulos}
-              />
-            </div>  
+      {/* ── VISTA: SERVICIOS ────────────────────────────────────────── */}
+      {currentView === "servicios" && (
+        <main id="main-content">
+          <section aria-labelledby="servicios-page-heading" className="py-10 sm:py-16 bg-white">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {/* Loading y Error */}
-            {loading && (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#A50034]"></div>
-                <p className="mt-2 text-gray-600">Cargando artículos...</p>
+              {/* Breadcrumb + back */}
+              <nav aria-label="Ruta de navegación" className="mb-8">
+                <ol className="flex items-center gap-2 text-sm text-gray-400">
+                  <li>
+                    <button
+                      onClick={() => navigateTo("hero")}
+                      className="hover:text-[#A50034] transition-colors"
+                    >
+                      Inicio
+                    </button>
+                  </li>
+                  <li aria-hidden="true">›</li>
+                  <li className="text-gray-700 font-medium" aria-current="page">Servicios</li>
+                </ol>
+              </nav>
+
+              {/* Hero de sección */}
+              <div className="mb-14">
+                <SectionLabel>Quiénes somos</SectionLabel>
+                <h1
+                  id="servicios-page-heading"
+                  className="text-3xl sm:text-4xl md:text-5xl font-red-hat-display font-bold text-gray-900 mt-2 mb-4"
+                >
+                  Servicio técnico oficial LG
+                  <br />
+                  <span className="text-[#A50034]">en tu domicilio</span>
+                </h1>
+                <p className="text-lg text-gray-500 max-w-2xl leading-relaxed">
+                  Somos un equipo con más de{" "}
+                  <strong className="text-gray-700">20 años de experiencia</strong> como técnicos
+                  autorizados LG en Zona Norte. Usamos repuestos originales, garantizamos cada
+                  trabajo y atendemos sin franquicia en tu hogar.
+                </p>
               </div>
-            )}
 
-            {error && (
-              <div className="text-center py-12">
-                <p className="text-red-600">Error: {error}</p>
+              {/* Diferenciadores */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                {DIFERENCIADORES.map((d) => {
+                  const Icon = d.icon
+                  return (
+                    <div
+                      key={d.titulo}
+                      className="bg-gray-50 rounded-xl p-5 border border-gray-100"
+                    >
+                      <div
+                        className="w-10 h-10 bg-[#A50034]/8 rounded-lg flex items-center justify-center mb-3"
+                        aria-hidden="true"
+                      >
+                        <Icon className="h-5 w-5 text-[#A50034]" />
+                      </div>
+                      <h3 className="font-red-hat-display font-semibold text-gray-900 text-sm mb-1">
+                        {d.titulo}
+                      </h3>
+                      <p className="text-xs text-gray-500 leading-relaxed">{d.descripcion}</p>
+                    </div>
+                  )
+                })}
               </div>
-            )}
 
-            {/* Grid de artículos */}
-            {!loading && !error && (
-              <>
-                <div 
-                className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
-                  {articulos.map((articulo) => (
-                    <Card key={articulo.id} className="hover:shadow-lg transition-shadow bg-white h-auto flex flex-col">
-                      {/* <div className="aspect-square relative overflow-hidden rounded-t-lg">
-                        <Image
-                          src={articulo.imagen || "/placeholder.svg"}
-                          alt={articulo.nombre}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute top-2 right-2">
-                          <span
-                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              articulo.tipo === "repuesto" ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"
-                            }`}
-                          >
-                            {articulo.tipo === "repuesto" ? "Repuesto" : "Parte"}
-                          </span>
-                        </div>
-                      </div> */}
-                      <CardHeader className="pb-3 flex-shrink-0">
-                        <CardTitle className="font-red-hat-display text-lg sm:text-xl text-[#A50034] line-clamp-2">
-                          {articulo.nombre}
-                        </CardTitle>
-                        <CardDescription className="text-gray-600 text-sm sm:text-base line-clamp-3">
-                          {articulo.descripcion}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="flex-grow flex flex-col justify-between">
-                        <div className="space-y-3 flex-grow">
-                          <div className="flex-grow">
-                            <span className="font-semibold text-gray-700 block mb-1 text-sm sm:text-base">
-                              Modelos compatibles:
-                            </span>
-                            <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{articulo.modelos?.join(', ')}</p>
-                          </div>
-                        </div>
-                        <Button
-                          className="w-full bg-[#A50034] hover:bg-[#8A0029] text-white mt-4 text-sm sm:text-base flex-shrink-0"
-                          onClick={() => window.open(`https://wa.me/5491138652822?text=${encodeURIComponent(
-                            `Hola, quiero consultar por este artículo: ${articulo.descripcion}`
-                          )}`, "_blank")}
-                        >
-                          <Image src="/images/whatsapp.png" alt="WhatsApp" width={16} height={16} className="mr-2" />
-                          Consultar
-                        </Button>
-                      </CardContent>
-                    </Card>
+              {/* Qué reparamos */}
+              <div className="mb-16">
+                <SectionLabel>Equipos</SectionLabel>
+                <h2 className="text-2xl sm:text-3xl font-red-hat-display font-bold text-gray-900 mb-8 mt-2">
+                  ¿Qué equipos reparamos?
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                  {SERVICIOS.map((s) => (
+                    <article
+                      key={s.nombre}
+                      className="bg-white rounded-xl border border-gray-200 p-6 hover:border-[#A50034]/30 hover:shadow-sm transition-all"
+                    >
+                      <h3 className="font-red-hat-display font-bold text-[#A50034] text-lg mb-3">
+                        {s.nombre}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">{s.descripcion}</p>
+                    </article>
                   ))}
                 </div>
+              </div>
 
-                {/* Paginación */}
-                <Paginacion paginaActual={paginaActual} totalPaginas={totalPaginas} onPaginaChange={setPaginaActual} onPageChangeScroll={scrollToArticulos} />
-              </>
-            )}
-
-            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
-              {repuestos.map((repuesto, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow bg-white h-80 flex flex-col">
-                  <CardHeader className="pb-3 flex-shrink-0">
-                    <CardTitle className="font-red-hat-display text-lg sm:text-xl text-[#A50034] line-clamp-2 h-14 flex items-start">
-                      {repuesto.nombre}
-                    </CardTitle>
-                    <CardDescription className="text-gray-600 text-sm sm:text-base line-clamp-3 h-16 flex items-start">
-                      {repuesto.descripcion}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow flex flex-col justify-between">
-                    <div className="space-y-3 flex-grow">
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold text-gray-700 text-sm sm:text-base">Precio:</span>
-                        <span className="text-[#A50034] font-bold text-lg sm:text-xl">{repuesto.precio}</span>
+              {/* Cómo funciona */}
+              <div className="mb-16 bg-gray-50 rounded-2xl p-8 border border-gray-100">
+                <SectionLabel>Proceso</SectionLabel>
+                <h2 className="text-2xl font-red-hat-display font-bold text-gray-900 mb-8 mt-2">
+                  ¿Cómo funciona una visita técnica?
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  {[
+                    {
+                      paso: "1",
+                      titulo: "Contactanos",
+                      desc: "Escribinos por WhatsApp con el modelo de tu equipo y el problema que tiene.",
+                    },
+                    {
+                      paso: "2",
+                      titulo: "Coordinamos la visita",
+                      desc: "Acordamos día y horario en tu domicilio.",
+                    },
+                    {
+                      paso: "3",
+                      titulo: "Diagnóstico y reparación",
+                      desc: "Evaluamos el equipo, te informamos el costo y, con tu aprobación, reparamos.",
+                    },
+                  ].map((p) => (
+                    <div key={p.paso} className="flex gap-4">
+                      <div
+                        className="w-8 h-8 bg-[#A50034] text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      >
+                        {p.paso}
                       </div>
-                      <div className="flex-grow">
-                        <span className="font-semibold text-gray-700 block mb-1 text-sm sm:text-base">
-                          Modelos compatibles:
-                        </span>
-                        <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{repuesto.modelos}</p>
+                      <div>
+                        <h3 className="font-red-hat-display font-semibold text-gray-900 mb-1">
+                          {p.titulo}
+                        </h3>
+                        <p className="text-gray-500 text-sm leading-relaxed">{p.desc}</p>
                       </div>
                     </div>
-                    <Button
-                      className="w-full bg-[#A50034] hover:bg-[#8A0029] text-white mt-4 text-sm sm:text-base flex-shrink-0"
-                      onClick={() => window.open("https://wa.me/5491138652822", "_blank")}
-                    >
-                      <Image src="/images/whatsapp.png" alt="WhatsApp" width={16} height={16} className="mr-2" />
-                      Pedir por WhatsApp
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div> */}
+                  ))}
+                </div>
+              </div>
 
-            {/* Mensaje para repuestos no encontrados */}
-            <Card className="bg-[#A50034] text-white mx-2 sm:mx-0 mt-8">
-              <CardContent className="p-6 sm:p-8 text-center">
-                <h3 className="font-red-hat-display text-xl sm:text-2xl font-bold mb-4">
-                  ¿No encontrás el repuesto o parte que necesitás?
-                </h3>
-                <p className="text-base sm:text-lg mb-6">
-                  Escribinos por WhatsApp indicando qué estás buscando junto al modelo de tu equipo y te ayudamos a conseguirlo.
+              {/* Zona de cobertura */}
+              <div className="mb-16">
+                <SectionLabel>Cobertura</SectionLabel>
+                <h2 className="text-2xl font-red-hat-display font-bold text-gray-900 mb-6 mt-2">
+                  ¿Dónde atendemos?
+                </h2>
+                <div className="flex flex-wrap gap-3" role="list" aria-label="Zonas de cobertura">
+                  {ZONAS.map((zona) => (
+                    <div
+                      key={zona}
+                      role="listitem"
+                      className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2"
+                    >
+                      <MapPin className="h-4 w-4 text-[#A50034]" aria-hidden="true" />
+                      <span className="text-sm font-medium text-gray-700">{zona}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA de contacto */}
+              <div
+                className="bg-[#A50034] rounded-2xl p-8 sm:p-10 text-center"
+                role="complementary"
+                aria-label="Contacto"
+              >
+                <h2 className="text-2xl sm:text-3xl font-red-hat-display font-bold text-white mb-2">
+                  ¿Querés agendar una visita?
+                </h2>
+                <p className="text-[#ffb3c7] mb-6 text-base">
+                  Contactanos y coordinamos en minutos.
                 </p>
-                <Button
-                  variant="secondary"
-                  className="bg-white text-[#A50034] hover:bg-gray-100 px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg font-semibold"
-                  onClick={() => window.open(`https://wa.me/5491138652822?text=${encodeURIComponent(
-                            `Hola, quiero consultar si tienen... para el modelo...`
-                          )}`, "_blank")}
-                >
-                  <Image src="/images/whatsapp.png" alt="WhatsApp" width={20} height={20} className="mr-2" />
-                  Consultar Repuesto
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <WhatsAppButton
+                    numero={WHATSAPP_SERVICIOS}
+                    mensaje="Hola, quiero agendar una visita técnica"
+                    className="px-8 py-3 text-sm"
+                    variant="outline"
+                  >
+                    Agendar visita técnica
+                  </WhatsAppButton>
+                </div>
+                <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-[#ffb3c7] text-sm">
+                  <span className="flex items-center gap-2">
+                    <Phone className="h-4 w-4" aria-hidden="true" />
+                    +54 9 11 2852‑8465
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" aria-hidden="true" />
+                    Lun–Vie 9 a 17 hs
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4" aria-hidden="true" />
+                    Zona Norte, GBA
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
       )}
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-            <div className="text-center sm:text-left">
-              <h3 className="font-red-hat-display text-xl sm:text-2xl font-bold text-[#A50034] mb-4">Home Service</h3>
-              <p className="text-gray-300 text-sm sm:text-base">
-                Más de 20 años de experiencia en reparación de electrodomésticos LG. Tu hogar en las mejores manos.
-              </p>
-            </div>
-            <div className="text-center sm:text-left">
-              <h4 className="font-red-hat-display text-base sm:text-lg font-semibold mb-4">Contacto</h4>
-              <div className="space-y-2 text-gray-300 text-sm sm:text-base">
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Phone className="h-4 w-4 mr-2" />
-                  <span>Servicios: +54 9 11 2852 8465</span>
+      {/* ── VISTA: REPUESTOS ────────────────────────────────────────── */}
+      {currentView === "repuestos" && (
+        <main id="main-content">
+          <section aria-labelledby="repuestos-page-heading" className="py-10 sm:py-16 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+              {/* Breadcrumb */}
+              <nav aria-label="Ruta de navegación" className="mb-8">
+                <ol className="flex items-center gap-2 text-sm text-gray-400">
+                  <li>
+                    <button
+                      onClick={() => navigateTo("hero")}
+                      className="hover:text-[#A50034] transition-colors"
+                    >
+                      Inicio
+                    </button>
+                  </li>
+                  <li aria-hidden="true">›</li>
+                  <li className="text-gray-700 font-medium" aria-current="page">Repuestos</li>
+                </ol>
+              </nav>
+
+              {/* Encabezado */}
+              <div className="mb-10">
+                <SectionLabel>Catálogo</SectionLabel>
+                <h1
+                  id="repuestos-page-heading"
+                  className="text-3xl sm:text-4xl font-red-hat-display font-bold text-gray-900 mt-2 mb-3"
+                >
+                  Repuestos y partes originales LG
+                </h1>
+                <p className="text-gray-500 max-w-xl text-base">
+                  Stock de repuestos originales para heladeras, lavarropas y lavavajillas.
+                  Consultá disponibilidad y precio por WhatsApp.
+                </p>
+              </div>
+
+              {/* Filtros */}
+              <div ref={articulosRef}>
+                <FiltrosArticulos
+                  filtroTipo={filtroTipo}
+                  onFiltroTipoChange={setFiltroTipo}
+                  filtroSubtipos={filtroSubtipos}
+                  onToggleSubtipo={toggleSubtipo}
+                  onLimpiarSubtipos={limpiarSubtipos}
+                  subtiposDisponibles={subtiposDisponibles}
+                  filtroModelos={filtroModelos}
+                  onToggleModelo={toggleModelo}
+                  onLimpiarModelos={limpiarModelos}
+                  modelosDisponibles={modelosDisponibles}
+                  ordenPor={ordenPor}
+                  onOrdenChange={setOrdenPor}
+                  totalArticulos={totalArticulos}
+                />
+              </div>
+
+              {/* Loading */}
+              {loading && (
+                <div className="text-center py-16" role="status" aria-live="polite">
+                  <div
+                    className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-[#A50034] mb-3"
+                    aria-hidden="true"
+                  />
+                  <p className="text-gray-500 text-sm">Cargando artículos…</p>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Phone className="h-4 w-4 mr-2" />
-                  <span>Repuestos: +54 9 11 3865 2822</span>
+              )}
+
+              {/* Error */}
+              {error && (
+                <div className="text-center py-16" role="alert">
+                  <p className="text-red-600 font-medium">Error: {error}</p>
+                  <p className="text-gray-500 text-sm mt-2">
+                    Por favor recargá la página o contactanos directamente.
+                  </p>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  <span>Zona Norte, Buenos Aires</span>
-                </div>
-                <div className="flex items-center justify-center sm:justify-start ml-5">
-                  <span>(Nordelta, Tigre, San Fernando, San Isidro, Vicente López)</span>
-                </div>
+              )}
+
+              {/* Grid de artículos */}
+              {!loading && !error && (
+                <>
+                  {articulos.length === 0 ? (
+                    <div className="text-center py-16">
+                      <p className="text-gray-500 font-medium">
+                        No encontramos artículos con esos filtros.
+                      </p>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Probá cambiando los filtros o consultanos directamente.
+                      </p>
+                    </div>
+                  ) : (
+                    <div
+                      className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10"
+                      role="list"
+                      aria-label="Catálogo de repuestos"
+                    >
+                      {articulos.map((articulo) => (
+                        <article
+                          key={articulo.id}
+                          role="listitem"
+                          className="bg-white rounded-xl border border-gray-200 hover:border-[#A50034]/30 hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden"
+                        >
+                          <div className="p-5 flex flex-col flex-grow">
+                            {/* Badge de tipo */}
+                            <div className="mb-3">
+                              {/* <span
+                                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                                  articulo.tipo === "repuesto"
+                                    ? "bg-blue-50 text-blue-700"
+                                    : "bg-green-50 text-green-700"
+                                }`}
+                              >
+                                {articulo.tipo === "repuesto" ? "Repuesto" : "Parte"}
+                              </span> */}
+                            </div>
+
+                            {/* Nombre y descripción */}
+                            <h3 className="font-red-hat-display font-bold text-gray-900 text-base sm:text-lg mb-1 line-clamp-2">
+                              {articulo.nombre}
+                            </h3>
+                            <p className="text-gray-500 text-sm line-clamp-2 mb-4 leading-relaxed">
+                              {articulo.descripcion}
+                            </p>
+
+                            {/* Modelos */}
+                            <div className="mt-auto">
+                              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">
+                                Modelos compatibles
+                              </span>
+                              <p className="text-xs text-gray-600 line-clamp-2">
+                                {articulo.modelos?.join(", ")}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* CTA */}
+                          <div className="px-5 pb-5">
+                            <WhatsAppButton
+                              numero={WHATSAPP_REPUESTOS}
+                              mensaje={`Hola, quiero consultar por este repuesto: ${articulo.nombre} (${articulo.descripcion})`}
+                              className="w-full py-2.5 text-sm"
+                              variant="primary"
+                            >
+                              Consultar precio
+                            </WhatsAppButton>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+
+                  <Paginacion
+                    paginaActual={paginaActual}
+                    totalPaginas={totalPaginas}
+                    onPaginaChange={setPaginaActual}
+                    onPageChangeScroll={scrollToArticulos}
+                  />
+                </>
+              )}
+
+              {/* CTA inferior – repuesto no encontrado */}
+              <div className="mt-10 bg-[#A50034] rounded-2xl p-7 sm:p-8 text-center">
+                <h2 className="font-red-hat-display text-xl sm:text-2xl font-bold text-white mb-2">
+                  ¿No encontrás el repuesto que necesitás?
+                </h2>
+                <p className="text-[#ffb3c7] text-sm mb-5">
+                  Escribinos con el modelo de tu equipo y te ayudamos a conseguirlo.
+                </p>
+                <WhatsAppButton
+                  numero={WHATSAPP_REPUESTOS}
+                  mensaje="Hola, estoy buscando un repuesto para mi equipo LG modelo... ¿lo tienen?"
+                  className="px-6 py-3 text-sm"
+                  variant="secondary"
+                >
+                  Consultar disponibilidad
+                </WhatsAppButton>
               </div>
             </div>
-            <div className="text-center sm:text-left">
-              <h4 className="font-red-hat-display text-base sm:text-lg font-semibold mb-4">Horarios</h4>
-              <div className="text-gray-300 text-sm sm:text-base">
-                <div className="flex items-center justify-center sm:justify-start">
-                  <Clock className="h-4 w-4 mr-2" />
-                  <span>Lunes a viernes de 9 a 17hs</span>
-                </div>
+          </section>
+        </main>
+      )}
+
+      {/* ── Footer ─────────────────────────────────────────────────── */}
+      <footer role="contentinfo" className="bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
+
+            {/* Marca */}
+            <div>
+              <p className="font-red-hat-display text-xl font-bold text-[#A50034] mb-3">
+                Home Service
+              </p>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                Técnicos oficiales autorizados LG con más de 20 años en Zona Norte, Buenos Aires.
+                Reparamos tu hogar con garantía y repuestos originales.
+              </p>
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/images/lg.png"
+                  alt="LG Autorizado"
+                  width={40}
+                  height={20}
+                  className="opacity-60"
+                />
+                <span className="text-xs text-gray-500">Servicio Técnico Autorizado</span>
+              </div>
+            </div>
+
+            {/* Contacto */}
+            <div>
+              <h3 className="font-red-hat-display font-semibold text-white mb-4 text-sm uppercase tracking-wide">
+                Contacto
+              </h3>
+              <address className="not-italic space-y-3 text-gray-400 text-sm">
+                <p className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-[#A50034] flex-shrink-0" aria-hidden="true" />
+                  <span>Servicios: +54 9 11 2852‑8465</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-[#A50034] flex-shrink-0" aria-hidden="true" />
+                  <span>Repuestos: +54 9 11 3865‑2822</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-[#A50034] flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <span>Zona Norte, Buenos Aires<br />(Tigre, Nordelta, San Fernando, San Isidro, Vicente López, CABA)</span>
+                </p>
+              </address>
+            </div>
+
+            {/* Horarios */}
+            <div>
+              <h3 className="font-red-hat-display font-semibold text-white mb-4 text-sm uppercase tracking-wide">
+                Horarios
+              </h3>
+              <div className="space-y-2 text-gray-400 text-sm">
+                <p className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-[#A50034]" aria-hidden="true" />
+                  Lunes a viernes de 9 a 17 hs
+                </p>
+                <p className="text-gray-500 text-xs mt-3 leading-relaxed">
+                  Para urgencias fuera de horario, podés escribirnos por WhatsApp y te
+                  respondemos a la brevedad.
+                </p>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400 text-sm sm:text-base">
-            <p>&copy; {new Date().getFullYear()} Home Service. Todos los derechos reservados.</p>
+
+          <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-gray-500 text-xs">
+            <p>© {new Date().getFullYear()} Home Service. Todos los derechos reservados.</p>
+            <p>Servicio Técnico Oficial Autorizado LG Argentina</p>
           </div>
         </div>
       </footer>
