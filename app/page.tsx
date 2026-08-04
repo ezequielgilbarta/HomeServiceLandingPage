@@ -492,8 +492,8 @@ export default function HomePage() {
                 ¿Tu equipo LG tiene un problema?
               </h2>
               <p className="text-[#ffb3c7] text-lg mb-8">
-                Escribinos por WhatsApp y coordinamos una visita técnica en tu domicilio.
-                Sin compromiso, sin costo de diagnóstico.
+                Escribinos por WhatsApp y coordinamos una visita técnica a domicilio.
+                Te confirmamos el costo de la visita antes de coordinar el turno.
               </p>
               <WhatsAppButton
                 numero={WHATSAPP_SERVICIOS}
