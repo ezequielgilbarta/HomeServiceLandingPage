@@ -20,6 +20,12 @@ import { useArticulos } from "@/hooks/use-articulos"
 import { FiltrosArticulos } from "@/components/custom-ui/FiltrosArticulos"
 import { Paginacion } from "@/components/custom-ui/Paginacion"
 
+declare global {
+  interface Window {
+    dataLayer: Record<string, unknown>[]
+  }
+}
+
 // ─── Constantes de contacto centralizadas ────────────────────────────────────
 const WHATSAPP_SERVICIOS = "5491128528465"
 const WHATSAPP_REPUESTOS = "5491138652822"
@@ -80,12 +86,14 @@ function WhatsAppButton({
   children,
   className = "",
   variant = "primary",
+  section,
 }: {
   numero: string
   mensaje: string
   children: React.ReactNode
   className?: string
   variant?: "primary" | "secondary" | "outline"
+  section: string
 }) {
   const baseStyles =
     "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
@@ -94,6 +102,17 @@ function WhatsAppButton({
     secondary: "bg-white text-[#A50034] hover:bg-gray-50 focus-visible:ring-[#A50034] border border-[#A50034]",
     outline: "bg-transparent border-2 border-white text-white hover:bg-white/10 focus-visible:ring-white",
   }
+
+  const handleClick = () => {
+    if (typeof window === "undefined") return
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({
+      event: "whatsapp_click",
+      whatsapp_section: section,
+      whatsapp_numero: numero,
+    })
+  }
+
   return (
     <a
       href={waUrl(numero, mensaje)}
@@ -101,6 +120,7 @@ function WhatsAppButton({
       rel="noopener noreferrer"
       className={`${baseStyles} ${variants[variant]} ${className}`}
       aria-label={`Contactar por WhatsApp: ${mensaje}`}
+      onClick={handleClick}
     >
       <Image src="/images/whatsapp.png" alt="" width={18} height={18} aria-hidden="true" />
       {children}
@@ -211,6 +231,7 @@ export default function HomePage() {
                 mensaje="Hola, quiero consultar sobre un servicio técnico"
                 className="ml-3 px-4 py-2 text-sm"
                 variant="primary"
+                section="header_desktop"
               >
                 Consultar ahora
               </WhatsAppButton>
@@ -252,6 +273,7 @@ export default function HomePage() {
                   mensaje="Hola, quiero consultar sobre un servicio técnico"
                   className="w-full py-3 text-sm"
                   variant="primary"
+                  section="header_mobile"
                 >
                   Consultar por WhatsApp
                 </WhatsAppButton>
@@ -312,6 +334,7 @@ export default function HomePage() {
                   mensaje="Hola, necesito un servicio técnico para mi electrodoméstico LG"
                   className="px-8 py-4 text-base"
                   variant="primary"
+                  section="hero_principal"
                 >
                   Pedir visita técnica
                 </WhatsAppButton>
@@ -500,6 +523,7 @@ export default function HomePage() {
                 mensaje="Hola, necesito un servicio técnico para mi electrodoméstico LG"
                 className="px-8 py-4 text-base"
                 variant="outline"
+                section="cta_final_hero"
               >
                 Escribir por WhatsApp
               </WhatsAppButton>
@@ -678,15 +702,16 @@ export default function HomePage() {
                     mensaje="Hola, quiero agendar una visita técnica"
                     className="px-8 py-3 text-sm"
                     variant="outline"
+                    section="cta_servicios"
                   >
                     Agendar visita técnica
                   </WhatsAppButton>
                 </div>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-[#ffb3c7] text-sm">
-                  <span className="flex items-center gap-2">
+                  <a href="tel:+5491128528465" className="flex items-center gap-2 hover:underline">
                     <Phone className="h-4 w-4" aria-hidden="true" />
                     +54 9 11 2852‑8465
-                  </span>
+                  </a>
                   <span className="flex items-center gap-2">
                     <Clock className="h-4 w-4" aria-hidden="true" />
                     Lun–Vie 9 a 17 hs
@@ -843,6 +868,7 @@ export default function HomePage() {
                               mensaje={`Hola, quiero consultar por este repuesto: ${articulo.nombre} (${articulo.descripcion})`}
                               className="w-full py-2.5 text-sm"
                               variant="primary"
+                              section="catalogo_repuesto"
                             >
                               Consultar
                             </WhatsAppButton>
@@ -874,6 +900,7 @@ export default function HomePage() {
                   mensaje="Hola, estoy buscando un repuesto para mi equipo LG modelo... ¿lo tienen?"
                   className="px-6 py-3 text-sm"
                   variant="secondary"
+                  section="cta_repuestos"
                 >
                   Consultar disponibilidad
                 </WhatsAppButton>
@@ -917,11 +944,11 @@ export default function HomePage() {
               <address className="not-italic space-y-3 text-gray-400 text-sm">
                 <p className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-[#A50034] flex-shrink-0" aria-hidden="true" />
-                  <span>Servicios: +54 9 11 2852‑8465</span>
+                  <span>Servicios: <a href="tel:+5491128528465" className="hover:underline">+54 9 11 2852‑8465</a></span>
                 </p>
                 <p className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-[#A50034] flex-shrink-0" aria-hidden="true" />
-                  <span>Repuestos: +54 9 11 3865‑2822</span>
+                  <span>Repuestos: <a href="tel:+5491138652822" className="hover:underline">+54 9 11 3865‑2822</a></span>
                 </p>
                 <p className="flex items-start gap-2">
                   <MapPin className="h-4 w-4 text-[#A50034] flex-shrink-0 mt-0.5" aria-hidden="true" />

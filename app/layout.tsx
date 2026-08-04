@@ -1,6 +1,10 @@
 import type React from "react"
 import { Inter, Red_Hat_Display } from "next/font/google"
+import Script from "next/script"
 import "./globals.css"
+
+// Definir NEXT_PUBLIC_GTM_ID en .env.local (ej: GTM-XXXXXXX) una vez creado el contenedor en GTM.
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
 const inter = Inter({
   subsets: ["latin"],
@@ -100,6 +104,7 @@ const localBusinessSchema = {
     { "@type": "City", name: "San Fernando" },
     { "@type": "City", name: "San Isidro" },
     { "@type": "City", name: "Vicente López" },
+    { "@type": "City", name: "CABA" },
   ],
   address: {
     "@type": "PostalAddress",
@@ -161,10 +166,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {GTM_ID && (
+          <Script id="gtm-script" strategy="afterInteractive">
+            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${GTM_ID}');`}
+          </Script>
+        )}
       </head>
-      <body className="font-inter antialiased">{children}</body>
+      <body className="font-inter antialiased">
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+        {children}
+      </body>
     </html>
   )
 }
