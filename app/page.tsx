@@ -11,6 +11,7 @@ import {
   Shield,
   Zap,
   Star,
+  ExternalLink,
   Menu,
   X,
   MessageCircle,
@@ -19,6 +20,14 @@ import Image from "next/image"
 import { useArticulos } from "@/hooks/use-articulos"
 import { FiltrosArticulos } from "@/components/custom-ui/FiltrosArticulos"
 import { Paginacion } from "@/components/custom-ui/Paginacion"
+import { ResenasGoogle } from "@/components/custom-ui/ResenasGoogle"
+import {
+  GOOGLE_PROFILE_URL,
+  GOOGLE_RATING_LABEL,
+  GOOGLE_REVIEW_COUNT,
+  LG_SERVICE_CENTER_URL,
+} from "@/lib/business"
+import { trackEvent } from "@/lib/tracking"
 
 declare global {
   interface Window {
@@ -56,6 +65,7 @@ const DIFERENCIADORES = [
     icon: BadgeCheck,
     titulo: "Servicio Oficial Autorizado",
     descripcion: "Técnicos certificados por LG Argentina con acceso a repuestos originales de fábrica.",
+    enlaceLG: "Verificá nuestra habilitación en LG",
   },
   {
     icon: Shield,
@@ -74,9 +84,9 @@ const DIFERENCIADORES = [
   },
 ]
 
-const STATS = [
-  { valor: "+20", unidad: "años", descripcion: "de experiencia" },
-]
+// const STATS = [
+//   { valor: "+20", unidad: "años", descripcion: "de experiencia" },
+// ]
 
 // ─── Subcomponentes ───────────────────────────────────────────────────────────
 
@@ -133,6 +143,32 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <span className="inline-block text-xs font-semibold tracking-widest uppercase text-[#A50034] mb-3 bg-[#A50034]/8 px-3 py-1 rounded-full">
       {children}
     </span>
+  )
+}
+
+// Enlace a la ficha oficial de LG Argentina que respalda el servicio autorizado
+function LgVerifyLink({
+  section,
+  className = "",
+  ariaLabel = "Verificar nuestra habilitación en la web oficial de LG (se abre en una pestaña nueva)",
+  children,
+}: {
+  section: string
+  className?: string
+  ariaLabel?: string
+  children: React.ReactNode
+}) {
+  return (
+    <a
+      href={LG_SERVICE_CENTER_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={ariaLabel}
+      className={className}
+      onClick={() => trackEvent("lg_verification_click", { lg_section: section })}
+    >
+      {children}
+    </a>
   )
 }
 
@@ -294,7 +330,10 @@ export default function HomePage() {
           >
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               {/* Badge de confianza */}
-              <div className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm text-gray-600 mb-6 shadow-sm">
+              <LgVerifyLink
+                section="hero_badge"
+                className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm text-gray-600 mb-6 shadow-sm hover:border-[#A50034] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034]"
+              >
                 <BadgeCheck className="h-4 w-4 text-[#A50034]" aria-hidden="true" />
                 <span>Servicio Técnico Oficial Autorizado</span>
                 <Image
@@ -304,7 +343,8 @@ export default function HomePage() {
                   height={14}
                   className="ml-1"
                 />
-              </div>
+                <ExternalLink className="h-3 w-3 text-gray-400" aria-hidden="true" />
+              </LgVerifyLink>
 
               {/* Headline principal */}
               <h1
@@ -348,13 +388,23 @@ export default function HomePage() {
               </div>
 
               {/* Social proof mínimo */}
-              <div className="mt-8 flex items-center justify-center gap-1" aria-label="Calificación">
+              <a
+                href={GOOGLE_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackEvent("google_reviews_click", { reviews_section: "hero" })}
+                className="mt-8 inline-flex items-center justify-center gap-1 rounded-md hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034]"
+                aria-label={`Puntaje ${GOOGLE_RATING_LABEL} de 5 en Google, ${GOOGLE_REVIEW_COUNT} reseñas. Ver perfil en Google (se abre en una pestaña nueva)`}
+              >
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
                 ))}
-                <span className="ml-2 text-sm text-gray-500">Técnicos certificados LG Argentina</span>
-              </div>
-              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <span className="ml-2 text-sm text-gray-500">
+                  <strong className="font-semibold text-gray-700">{GOOGLE_RATING_LABEL}</strong> ·{" "}
+                  {GOOGLE_REVIEW_COUNT} reseñas en Google
+                </span>
+              </a>
+              {/* <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 <dl className="grid grid-cols-1 divide-x divide-gray-100">
                   {STATS.map((stat) => (
                     <div key={stat.valor} className="text-center px-4 sm:px-8">
@@ -370,7 +420,7 @@ export default function HomePage() {
                     </div>
                   ))}
                 </dl>
-              </div>
+              </div> */}
             </div>
           </section>
 
@@ -465,12 +515,25 @@ export default function HomePage() {
                         {d.titulo}
                       </h3>
                       <p className="text-sm text-gray-500 leading-relaxed">{d.descripcion}</p>
+                      {d.enlaceLG && (
+                        <LgVerifyLink
+                          section="diferenciador_inicio"
+                          ariaLabel={`${d.enlaceLG} (se abre en una pestaña nueva)`}
+                          className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-[#A50034] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034] rounded"
+                        >
+                          {d.enlaceLG}
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                        </LgVerifyLink>
+                      )}
                     </div>
                   )
                 })}
               </div>
             </div>
           </section>
+
+          {/* Reseñas de Google */}
+          <ResenasGoogle />
 
           {/* CTA intermedio – Repuestos */}
           <section
@@ -596,6 +659,16 @@ export default function HomePage() {
                         {d.titulo}
                       </h3>
                       <p className="text-xs text-gray-500 leading-relaxed">{d.descripcion}</p>
+                      {d.enlaceLG && (
+                        <LgVerifyLink
+                          section="diferenciador_servicios"
+                          ariaLabel={`${d.enlaceLG} (se abre en una pestaña nueva)`}
+                          className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-[#A50034] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034] rounded"
+                        >
+                          {d.enlaceLG}
+                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                        </LgVerifyLink>
+                      )}
                     </div>
                   )
                 })}
@@ -924,7 +997,10 @@ export default function HomePage() {
                 Técnicos oficiales autorizados LG con más de 20 años en Zona Norte, Buenos Aires.
                 Reparamos tu hogar con garantía y repuestos originales.
               </p>
-              <div className="flex items-center gap-2">
+              <LgVerifyLink
+                section="footer"
+                className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-300 transition-colors"
+              >
                 <Image
                   src="/images/lg.png"
                   alt="LG Autorizado"
@@ -932,8 +1008,9 @@ export default function HomePage() {
                   height={20}
                   className="opacity-60"
                 />
-                <span className="text-xs text-gray-500">Servicio Técnico Autorizado</span>
-              </div>
+                <span className="text-xs">Servicio Técnico Autorizado · Verificar en LG</span>
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              </LgVerifyLink>
             </div>
 
             {/* Contacto */}
@@ -953,6 +1030,18 @@ export default function HomePage() {
                 <p className="flex items-start gap-2">
                   <MapPin className="h-4 w-4 text-[#A50034] flex-shrink-0 mt-0.5" aria-hidden="true" />
                   <span>Zona Norte, Buenos Aires<br />(Tigre, Nordelta, San Fernando, San Isidro, Vicente López, CABA)</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-[#A50034] flex-shrink-0" aria-hidden="true" />
+                  <a
+                    href={GOOGLE_PROFILE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent("google_reviews_click", { reviews_section: "footer" })}
+                    className="hover:underline"
+                  >
+                    {GOOGLE_RATING_LABEL} en Google · {GOOGLE_REVIEW_COUNT} reseñas
+                  </a>
                 </p>
               </address>
             </div>

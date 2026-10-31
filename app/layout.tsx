@@ -2,6 +2,7 @@ import type React from "react"
 import { Inter, Red_Hat_Display } from "next/font/google"
 import Script from "next/script"
 import "./globals.css"
+import { GOOGLE_PROFILE_URL } from "@/lib/business"
 
 // Definir NEXT_PUBLIC_GTM_ID en .env.local (ej: GTM-XXXXXXX) una vez creado el contenedor en GTM.
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
@@ -125,7 +126,7 @@ const localBusinessSchema = {
       closes: "17:00",
     },
   ],
-  sameAs: [],
+  sameAs: [GOOGLE_PROFILE_URL],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Servicios de reparación y venta de repuestos",
