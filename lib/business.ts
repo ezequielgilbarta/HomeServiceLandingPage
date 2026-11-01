@@ -7,7 +7,7 @@ export const LG_SERVICE_CENTER_URL =
   "https://www.lg.com/ar/soporte/ubicacion-centro-reparacion/AR0047750-S"
 
 export const GOOGLE_RATING = 5.0
-export const GOOGLE_REVIEW_COUNT = 17
+export const GOOGLE_REVIEW_COUNT = null
 
 // Formato es-AR: "5,0"
 export const GOOGLE_RATING_LABEL = GOOGLE_RATING.toFixed(1).replace(".", ",")

@@ -56,7 +56,7 @@ export function ResenasGoogle() {
             </span>
             <span className="flex flex-col items-start gap-0.5" aria-hidden="true">
               <Estrellas />
-              <span className="text-xs text-gray-500">{GOOGLE_REVIEW_COUNT} reseñas en Google</span>
+              <span className="text-xs text-gray-500">{GOOGLE_REVIEW_COUNT} Reseñas en Google</span>
             </span>
           </a>
         </div>

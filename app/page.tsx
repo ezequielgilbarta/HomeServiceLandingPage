@@ -326,13 +326,13 @@ export default function HomePage() {
           {/* Hero principal */}
           <section
             aria-labelledby="hero-heading"
-            className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-24"
+            className="bg-gradient-to-b from-gray-50 to-white py-10 sm:py-24"
           >
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               {/* Badge de confianza */}
               <LgVerifyLink
                 section="hero_badge"
-                className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm text-gray-600 mb-6 shadow-sm hover:border-[#A50034] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034]"
+                className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1 text-xs text-gray-600 mb-6 shadow-sm hover:border-[#A50034] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034] md:mb-14"
               >
                 <BadgeCheck className="h-4 w-4 text-[#A50034]" aria-hidden="true" />
                 <span>Servicio Técnico Oficial Autorizado</span>
@@ -349,30 +349,30 @@ export default function HomePage() {
               {/* Headline principal */}
               <h1
                 id="hero-heading"
-                className="text-4xl sm:text-5xl md:text-6xl font-red-hat-display font-bold text-gray-900 leading-tight mb-5"
+                className="text-4xl font-red-hat-display font-bold text-gray-900 leading-tight mb-8 md:text-6xl md:mb-14"
               >
                 Tu electrodoméstico LG{" "}
                 <span className="text-[#A50034]">reparado por técnicos oficiales</span>
               </h1>
 
               {/* Subtítulo */}
-              <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-3 leading-relaxed">
+              <p className="text-md text-gray-500 max-w-2xl mx-auto mb-8 leading-relaxed md:mb-10">
                 Más de 20 años reparando heladeras, lavarropas y lavavajillas LG en Zona Norte.
                 Diagnóstico en tu domicilio, repuestos originales y garantía incluida.
               </p>
 
               {/* Zonas de cobertura */}
-              <p className="text-sm text-gray-400 mb-10">
+              <p className="text-sm text-gray-400 mb-8">
                 <MapPin className="inline h-3.5 w-3.5 mr-1 text-[#A50034]" aria-hidden="true" />
                 {ZONAS.join(" · ")}
               </p>
 
               {/* CTAs principales */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
                 <WhatsAppButton
                   numero={WHATSAPP_SERVICIOS}
                   mensaje="Hola, necesito un servicio técnico para mi electrodoméstico LG"
-                  className="px-8 py-4 text-base"
+                  className="px-8 py-3 text-base"
                   variant="primary"
                   section="hero_principal"
                 >
@@ -380,7 +380,7 @@ export default function HomePage() {
                 </WhatsAppButton>
                 <button
                   onClick={() => navigateTo("repuestos")}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:border-[#A50034] hover:text-[#A50034] transition-all duration-200 shadow-sm"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-semibold text-gray-700 bg-white border border-gray-200 rounded-lg hover:border-[#A50034] hover:text-[#A50034] transition-all duration-200 shadow-sm"
                 >
                   Ver repuestos
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -393,7 +393,7 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackEvent("google_reviews_click", { reviews_section: "hero" })}
-                className="mt-8 inline-flex items-center justify-center gap-1 rounded-md hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034]"
+                className="inline-flex items-center justify-center gap-1 rounded-md hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A50034]"
                 aria-label={`Puntaje ${GOOGLE_RATING_LABEL} de 5 en Google, ${GOOGLE_REVIEW_COUNT} reseñas. Ver perfil en Google (se abre en una pestaña nueva)`}
               >
                 {[...Array(5)].map((_, i) => (
@@ -401,7 +401,7 @@ export default function HomePage() {
                 ))}
                 <span className="ml-2 text-sm text-gray-500">
                   <strong className="font-semibold text-gray-700">{GOOGLE_RATING_LABEL}</strong> ·{" "}
-                  {GOOGLE_REVIEW_COUNT} reseñas en Google
+                  {GOOGLE_REVIEW_COUNT} Reseñas en Google
                 </span>
               </a>
               {/* <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
