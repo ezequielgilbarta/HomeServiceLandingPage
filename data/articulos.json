@@ -1,0 +1,334 @@
+{
+  "articulos": [
+    {
+      "id": 1,
+      "slug": "filtro-lt700-gr-j318lsbm",
+      "nombre": "Filtro LT700",
+      "descripcion": "Filtro de Agua Heladera LT700",
+      "modelos": [
+        "GR-J318LSBM"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-lt700.png",
+      "equipo": "heladeras",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 2,
+      "slug": "filtro-lt800-gs74sds",
+      "nombre": "Filtro LT800",
+      "descripcion": "Filtro de Agua Heladera LT800",
+      "modelos": [
+        "GS74SDS"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-lt800.png",
+      "equipo": "heladeras",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 3,
+      "slug": "filtro-lt1000",
+      "nombre": "Filtro LT1000",
+      "descripcion": "Filtro de Agua Heladera LT1000",
+      "modelos": [
+        "GM-X267NSTM",
+        "LS74SXSX",
+        "LM75SDS",
+        "GS66SXSC",
+        "GS77SXTC"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "",
+      "imagen": "/images/articulos/filtro-lt1000.png",
+      "equipo": "heladeras",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 4,
+      "slug": "filtro-para-gc-j237jspn",
+      "nombre": "Filtro para GC-J237JSPN",
+      "descripcion": "Filtro de Agua Heladera para GC-J237JSPN",
+      "modelos": [
+        "GC-J237JSPN"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-adq73153301.png",
+      "equipo": "heladeras",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 5,
+      "slug": "filtro-externo",
+      "nombre": "Filtro Externo",
+      "descripcion": "Filtro de Agua Heladera Externo",
+      "modelos": [
+        "GC-L207WTQ",
+        "LS65SDP1",
+        "GC-X247CQBV",
+        "GR-P257BTA"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "stock",
+      "imagen": "/images/articulos/filtro-externo.png",
+      "equipo": "heladeras",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 6,
+      "slug": "filtro-para-gc-p207wtq",
+      "nombre": "Filtro para GC-P207WTQ",
+      "descripcion": "Filtro de Agua Heladera GC-P207WTQ",
+      "modelos": [
+        "GC-P207WTQ"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro",
+      "estado": "activo",
+      "imagen": "/images/articulos/filtro-adq72910901.png",
+      "equipo": "heladeras",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 7,
+      "slug": "resistencia-d1452lf-d1455cf",
+      "nombre": "Resistencia",
+      "descripcion": "Resistencia para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "resistencia",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 8,
+      "slug": "placa-display-d1452lf",
+      "nombre": "Placa Display",
+      "descripcion": "Placa Display para Lavavajillas D1452LF",
+      "modelos": [
+        "D1452LF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "placa display",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 9,
+      "slug": "placa-display-d1455cf",
+      "nombre": "Placa Display",
+      "descripcion": "Placa Display para Lavavajillas D1455CF",
+      "modelos": [
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "placa display",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 10,
+      "slug": "placa-main-d1452lf",
+      "nombre": "Placa Main",
+      "descripcion": "Placa Main para Lavavajillas D1452LF",
+      "modelos": [
+        "D1452LF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "placa main",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 11,
+      "slug": "placa-main-d1455cf",
+      "nombre": "Placa Main",
+      "descripcion": "Placa Main para Lavavajillas D1455CF",
+      "modelos": [
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "placa main",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 12,
+      "slug": "caudalimetro-d1452lf-d1455cf",
+      "nombre": "Caudalímetro",
+      "descripcion": "Caudalímetro para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "caudalímetro",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 13,
+      "slug": "filtro-pelusa-d1452lf-d1455cf",
+      "nombre": "Filtro Pelusa",
+      "descripcion": "Filtro Pelusa para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "filtro pelusa",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 14,
+      "slug": "bomba-desagote-d1452lf-d1455cf",
+      "nombre": "Bomba Desagote",
+      "descripcion": "Bomba Desagote para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "bomba desagote",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 15,
+      "slug": "motor-principal-d1452lf-d1455cf",
+      "nombre": "Motor Principal",
+      "descripcion": "Motor Principal para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "motor principal",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 16,
+      "slug": "panel-d1455cf",
+      "nombre": "Panel",
+      "descripcion": "Panel para Lavavajillas D1455CF",
+      "modelos": [
+        "D1455CF"
+      ],
+      "tipo": "repuesto",
+      "subtipo": "panel",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "repuestos"
+    },
+    {
+      "id": 17,
+      "slug": "tapa-d1452lf",
+      "nombre": "Tapa",
+      "descripcion": "Tapa para Lavavajillas D1452LF",
+      "modelos": [
+        "D1452LF"
+      ],
+      "tipo": "parte",
+      "subtipo": "tapa",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 18,
+      "slug": "tapa-d1455cf",
+      "nombre": "Tapa",
+      "descripcion": "Tapa para Lavavajillas D1455CF",
+      "modelos": [
+        "D1455CF"
+      ],
+      "tipo": "parte",
+      "subtipo": "tapa",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 19,
+      "slug": "rack-superior-d1452lf-d1455cf",
+      "nombre": "Rack Superior",
+      "descripcion": "Rack Superior para Lavavajillas D1452LF (Rack Medio para D1455CF)",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "parte",
+      "subtipo": "rack superior",
+      "estado": "stock",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 20,
+      "slug": "rack-inferior-d1452lf-d1455cf",
+      "nombre": "Rack Inferior",
+      "descripcion": "Rack Inferior para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "parte",
+      "subtipo": "rack inferior",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "accesorios"
+    },
+    {
+      "id": 21,
+      "slug": "canasto-d1452lf-d1455cf",
+      "nombre": "Canasto",
+      "descripcion": "Canasto para Lavavajillas D1452LF, D1455CF",
+      "modelos": [
+        "D1452LF",
+        "D1455CF"
+      ],
+      "tipo": "parte",
+      "subtipo": "canasto",
+      "estado": "activo",
+      "imagen": "",
+      "equipo": "lavavajillas",
+      "seccion": "accesorios"
+    }
+  ]
+}

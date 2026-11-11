@@ -1,53 +1,22 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import type { Articulo } from "@/lib/articulos"
 
-export interface Articulo {
-  id: number
-  nombre: string
-  descripcion: string
-  precio: number
-  modelos: string[]
-  tipo: "repuesto" | "parte"
-  subtipo: string
-  imagen: string
-}
+export type { Articulo }
 
 export type TipoFiltro = "todos" | "repuesto" | "parte"
 export type SubtiposFiltro = string[]
 export type OrdenFiltro = "nombre" | "tipo" | "precio" | "subtipo"
 export type ModelosFiltro = string[]
 
-export function useArticulos() {
-  const [articulos, setArticulos] = useState<Articulo[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export function useArticulos(articulos: Articulo[]) {
   const [filtroTipo, setFiltroTipo] = useState<TipoFiltro>("todos")
   const [filtroSubtipos, setFiltroSubtipos] = useState<SubtiposFiltro>([])
   const [filtroModelos, setFiltroModelos] = useState<ModelosFiltro>([])
   const [ordenPor, setOrdenPor] = useState<OrdenFiltro>("nombre")
   const [paginaActual, setPaginaActual] = useState(1)
   const itemsPorPagina = 9
-
-  useEffect(() => {
-    const cargarArticulos = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch("/data/articulos.json")
-        if (!response.ok) {
-          throw new Error("Error al cargar los artículos")
-        }
-        const data = await response.json()
-        setArticulos(data.articulos)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Error desconocido")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    cargarArticulos()
-  }, [])
 
   const subtiposDisponibles = useMemo(() => {
     const subtipos = [...new Set(articulos.map((articulo) => articulo.subtipo))]
@@ -89,7 +58,7 @@ export function useArticulos() {
         case "subtipo":
           return a.subtipo.localeCompare(b.subtipo)
         case "precio":
-          return a.precio - b.precio
+          return (a.precio ?? 0) - (b.precio ?? 0)
         default:
           return 0
       }
@@ -129,8 +98,6 @@ export function useArticulos() {
 
   return {
     articulos: articulosPaginados,
-    loading,
-    error,
     filtroTipo,
     setFiltroTipo,
     filtroSubtipos,

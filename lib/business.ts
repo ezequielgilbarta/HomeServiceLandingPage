@@ -11,3 +11,7 @@ export const GOOGLE_REVIEW_COUNT = null
 
 // Formato es-AR: "5,0"
 export const GOOGLE_RATING_LABEL = GOOGLE_RATING.toFixed(1).replace(".", ",")
+
+// ─── Sitio ────────────────────────────────────────────────────────────────────
+export const SITE_URL = "https://homeservicezn.com.ar"
+export const BRAND_NAME = "Home Service"

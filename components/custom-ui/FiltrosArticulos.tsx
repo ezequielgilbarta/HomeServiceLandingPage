@@ -19,6 +19,7 @@ interface FiltrosArticulosProps {
   ordenPor: OrdenFiltro
   onOrdenChange: (orden: OrdenFiltro) => void
   totalArticulos: number
+  mostrarTipo?: boolean
 }
 
 export function FiltrosArticulos({
@@ -35,23 +36,26 @@ export function FiltrosArticulos({
   ordenPor,
   onOrdenChange,
   totalArticulos,
+  mostrarTipo = true,
 }: FiltrosArticulosProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border p-4 mb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Tipo:</label>
-          <Select value={filtroTipo} onValueChange={onFiltroTipoChange}>
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos</SelectItem>
-              <SelectItem value="repuesto">Repuestos</SelectItem>
-              <SelectItem value="parte">Partes</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {mostrarTipo && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Tipo:</label>
+            <Select value={filtroTipo} onValueChange={onFiltroTipoChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos</SelectItem>
+                <SelectItem value="repuesto">Repuestos</SelectItem>
+                <SelectItem value="parte">Partes</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Subtipos:</label>

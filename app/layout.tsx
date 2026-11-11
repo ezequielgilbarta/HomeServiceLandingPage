@@ -2,7 +2,9 @@ import type React from "react"
 import { Inter, Red_Hat_Display } from "next/font/google"
 import Script from "next/script"
 import "./globals.css"
-import { GOOGLE_PROFILE_URL } from "@/lib/business"
+import { GOOGLE_PROFILE_URL, SITE_URL, BRAND_NAME } from "@/lib/business"
+import { Header } from "@/components/site/Header"
+import { Footer } from "@/components/site/Footer"
 
 // Definir NEXT_PUBLIC_GTM_ID en .env.local (ej: GTM-XXXXXXX) una vez creado el contenedor en GTM.
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
@@ -18,9 +20,6 @@ const redHatDisplay = Red_Hat_Display({
   variable: "--font-red-hat-display",
   display: "swap",
 })
-
-const SITE_URL = "https://homeservicezn.com.ar"
-const BRAND_NAME = "Home Service"
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -73,9 +72,6 @@ export const metadata = {
     title: "Home Service | Servicio Técnico Oficial LG · Zona Norte GBA",
     description: "Técnicos autorizados LG con más de 20 años en Zona Norte GBA.",
     images: ["/og-image.png"],
-  },
-  alternates: {
-    canonical: SITE_URL,
   },
   verification: {
     // Agregar cuando se tenga Google Search Console
@@ -188,7 +184,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             />
           </noscript>
         )}
-        {children}
+        <div className="min-h-screen bg-white">
+          <Header />
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   )
